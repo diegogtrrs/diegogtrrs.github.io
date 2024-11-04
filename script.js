@@ -1,26 +1,39 @@
-"use strict"
+"use strict";
+var map = L.map('map').setView([46.201398876908065, 6.145992279052734], 11);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
 
-let affichage = document.getElementById("affichage");
+var marker = L.marker([46.197, 6.141228675842286]).addTo(map);
 
-async function recupererPays() {
-    const reponse = await fetch("https://restcountries.com/v3.1/all");
-    const pays = await reponse.json();
-    
-    return pays;
+function showMarkerDetails(marker) {
+    const details = `
+        <div class="w3-container">
+            <h3>Détails de l'Objet Caché</h3>
+            <p>nom : La où rassemblé un homme revint à la vie. </p>
+            <p> <img src="img/statue-frankenstein-geneve_light.jpg.jfif" alt="">
+                <a href="index.html"><button onclick="backToMap()" class="w3-button w3-green">Retour à la carte</button></a>
+        </div>
+    `;
+    document.body.innerHTML = details;
 }
 
-async function afficherTousLesPays() {
-    const pays = await recupererPays();
-    console.log(pays);
-    let html = "";
-    pays.forEach(pays => {
-        html += "<tr>";
-        html += `<td> ${pays.name.common} </td>`;
-        html += `<td><img src="${pays.flags.svg}" alt=""></td>`;
-        html += "</tr>";
+map.on('click', (e) => {
+    marker.on('click', () => {
+        showMarkerDetails(marker);
     });
-    affichage.innerHTML = html;
+});
+
+var photo = document.getElementById("#photo").addEventListener("click", "afficherPhoto");
+function afficherPhoto(){
+    navigator.mediaDevices
+    .getUserMedia({ video: true, audio: false })
+    .then((stream) => {
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch((err) => {
+      console.error(`Une erreur est survenue : ${err}`);
+    });
 }
-
-afficherTousLesPays();
-
